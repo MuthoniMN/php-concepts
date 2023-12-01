@@ -9,9 +9,41 @@ function checkForEmpty($inputFields)
     return false;
 }
 
+function checkForInvalidText($string)
+{
+    if (!preg_match("/^[a-zA-z\s]*$/", $string)) {
+        return true;
+    }
+    return false;
+}
+
+function checkForInvalidEmail($str)
+{
+    if (!filter_var($str, FILTER_VALIDATE_EMAIL)) {
+        return true;
+    }
+    return false;
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (checkForEmpty([$_POST['name'], $_POST['email'], $_POST['portfolio'], $_POST['password']])) {
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $url = filter_input(INPUT_POST, 'portfolio', FILTER_SANITIZE_URL);
+    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    // check for empty fields
+    if (checkForEmpty([$name, $email, $url, $password])) {
         echo "Please fill all the fields";
+    }
+
+    // check if the user entered a name
+    if (checkForInvalidText($name)) {
+        echo "Please enter only characters and spaces";
+    }
+
+    // check if the email is valid
+    if (checkForInvalidEmail($email)) {
+        echo "Please enter a valid email";
     }
 }
 
