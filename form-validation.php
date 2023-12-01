@@ -49,20 +49,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // validating the name
     if (checkForEmpty($name)) {
         $nameError = "Please enter your name";
+    } elseif (checkForInvalidText($name)) {
+        $nameError = "Please only use characters and spaces. No special characters";
     }
     // validating the email
     if (checkForEmpty($email)) {
         $emailError = "Please enter your email";
+    } elseif (checkForInvalidEmail($email)) {
+        $emailError = "Please enter a valid email address";
     }
 
     //validating the URL
     if (checkForEmpty($url)) {
         $urlError = "Please enter your portfolio link";
+    } elseif (checkForInvalidURL($url)) {
+        $urlError = "Please enter a valid URL";
     }
 
     // validating the password
     if (checkForEmpty($password)) {
         $passwordError = "Please enter your password";
+    } elseif (checkForInvalidPassword($password)) {
+        $passwordError = "Please use a strong password";
     }
 }
 
