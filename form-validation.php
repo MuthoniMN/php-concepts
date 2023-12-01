@@ -1,10 +1,8 @@
 <?php
-function checkForEmpty($inputFields)
+function checkForEmpty($inputField)
 {
-    foreach ($inputFields as $inputField) {
-        if (empty($inputField)) {
-            return true;
-        }
+    if (empty($inputField)) {
+        return true;
     }
     return false;
 }
@@ -48,29 +46,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $url = filter_input(INPUT_POST, 'portfolio', FILTER_SANITIZE_URL);
     $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
 
-    // check for empty fields
-    if (checkForEmpty([$name, $email, $url, $password])) {
-        echo "Please fill all the fields";
+    // validating the name
+    if (checkForEmpty($name)) {
+        $nameError = "Please enter your name";
+    }
+    // validating the email
+    if (checkForEmpty($email)) {
+        $emailError = "Please enter your email";
     }
 
-    // check if the user entered a name
-    if (checkForInvalidText($name)) {
-        echo "Please enter only characters and spaces";
+    //validating the URL
+    if (checkForEmpty($url)) {
+        $urlError = "Please enter your portfolio link";
     }
 
-    // check if the email is valid
-    if (checkForInvalidEmail($email)) {
-        echo "Please enter a valid email";
-    }
-
-    // check if the URL is valid
-    if (checkForInvalidURL($url)) {
-        echo "Please enter a valid URL";
-    }
-
-    // check if the password is valid
-    if (checkForInvalidPassword($password)) {
-        echo "Please enter a strong password";
+    // validating the password
+    if (checkForEmpty($password)) {
+        $passwordError = "Please enter your password";
     }
 }
 
@@ -95,18 +87,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
                 <input type="text" class="form-control" id="name" name="name">
+                <div class="invalid-feedback"></div>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
                 <input type="email" class="form-control" id="email" name="email">
+                <div class="invalid-feedback"></div>
             </div>
             <div class="mb-3">
                 <label for="portfolio" class="form-label">Portfolio Link</label>
                 <input type="text" class="form-control" id="portfolio" name="portfolio">
+                <div class="invalid-feedback"></div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password">
+                <div class="invalid-feedback"></div>
                 <div class="form-text">
                     Your password should have:
                     <ul>
