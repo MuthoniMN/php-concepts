@@ -25,6 +25,14 @@ function checkForInvalidEmail($str)
     return false;
 }
 
+function checkForInvalidURL($str)
+{
+    if (!filter_var($str, FILTER_VALIDATE_URL)) {
+        return true;
+    }
+    return false;
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
@@ -44,6 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // check if the email is valid
     if (checkForInvalidEmail($email)) {
         echo "Please enter a valid email";
+    }
+
+    // check if the URL is valid
+    if (checkForInvalidURL($url)) {
+        echo "Please enter a valid URL";
     }
 }
 
@@ -75,11 +88,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="mb-3">
                 <label for="portfolio" class="form-label">Portfolio Link</label>
-                <input type="url" class="form-control" id="portfolio" name="portfolio">
+                <input type="text" class="form-control" id="portfolio" name="portfolio">
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password">
+                <div class="form-text">
+                    Your password should have:
+                    <ul>
+                        <li>at least one lowercase letter</li>
+                        <li>at least one uppercase letter</li>
+                        <li>at least one number</li>
+                        <li>at least one special character</li>
+                    </ul>
+                </div>
             </div>
 
             <input type="submit" value="Sign Up" class="btn btn-outline-primary">
