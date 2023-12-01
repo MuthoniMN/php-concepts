@@ -33,6 +33,15 @@ function checkForInvalidURL($str)
     return false;
 }
 
+function checkForInvalidPassword($password)
+{
+    $regex = "#.*^(?=.{8,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$#";
+    if (!preg_match($regex, $password)) {
+        return true;
+    }
+    return false;
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
@@ -57,6 +66,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // check if the URL is valid
     if (checkForInvalidURL($url)) {
         echo "Please enter a valid URL";
+    }
+
+    // check if the password is valid
+    if (checkForInvalidPassword($password)) {
+        echo "Please enter a strong password";
     }
 }
 
