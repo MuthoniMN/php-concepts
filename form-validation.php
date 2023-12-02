@@ -72,6 +72,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (checkForInvalidPassword($password)) {
         $passwordError = "Please use a strong password";
     }
+
+    if (isset($nameError)) {
+        $_SESSION['nameError'] = $nameError;
+    }
+    if (isset($emailError)) {
+        $_SESSION['emailError'] = $emailError;
+    }
+    if (isset($urlError)) {
+        $_SESSION['urlError'] = $urlError;
+    }
+    if (isset($passwordError)) {
+        $_SESSION['passwordError'] = $passwordError;
+    }
 }
 
 ?>
@@ -95,22 +108,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
                 <input type="text" class="form-control" id="name" name="name">
-                <div class="invalid-feedback"></div>
+                <div class="text-danger fw-bold"><?php echo isset($_SESSION['nameError']) ? $_SESSION['nameError'] : "" ?></div>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
                 <input type="email" class="form-control" id="email" name="email">
-                <div class="invalid-feedback"></div>
+                <div class="text-danger fw-bold"><?php echo isset($_SESSION['emailError']) ? $_SESSION['emailError'] : "" ?></div>
             </div>
             <div class="mb-3">
                 <label for="portfolio" class="form-label">Portfolio Link</label>
                 <input type="text" class="form-control" id="portfolio" name="portfolio">
-                <div class="invalid-feedback"></div>
+                <div class="text-danger fw-bold"><?php echo isset($_SESSION['urlError']) ? $_SESSION['urlError'] : "" ?></div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password">
-                <div class="invalid-feedback"></div>
+                <div class="text-danger fw-bold"><?php echo isset($_SESSION['passwordError']) ? $_SESSION['passwordError'] : "" ?></div>
                 <div class="form-text">
                     Your password should have:
                     <ul>
