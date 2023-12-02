@@ -5,6 +5,8 @@ include "./form-validate.php";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS);
     $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
+    $usernameError = '';
+    $passwordError = '';
 
     //validating the username
     if (checkForEmpty($username)) {
@@ -31,18 +33,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['formFields'] = $formFields;
 
     if (!$usernameError || !$passwordError) {
-        $query = "INSERT INTO userDetails(`name`, email, username, `password`) VALUES (?, ?, ?, ?)";
+        $query = "SELECT * FROM userDetails WHERE username='$username'";
+        $result = $connection->query($query);
 
-        $stmt = $connection->prepare($query);
-        $stmt->bind_param("ssss", $name, $email, $username, $password);
-        $result = $stmt->execute();
-
-        if ($result) {
-            echo "User saved successfully";
-            header("Location: landing.php");
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                if ($row['password'] == $password) {
+                    echo "Logged in successfully";
+                    header("Location: landing.php");
+                } else {
+                    $loginError = "Wrong password";
+                }
+            }
         } else {
-            $loginError = "Log-in failed";
-            $_SESSION['loginError'] = $loginError;
+            $loginError = "User not found!";
         }
     }
 }
