@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $url = filter_input(INPUT_POST, 'portfolio', FILTER_SANITIZE_URL);
     $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
+    $formFields = [];
 
     // validating the name
     if (checkForEmpty($name)) {
@@ -52,12 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (checkForInvalidText($name)) {
         $nameError = "Please only use characters and spaces. No special characters";
     }
+    $formFields['name'] = $name;
     // validating the email
     if (checkForEmpty($email)) {
         $emailError = "Please enter your email";
     } elseif (checkForInvalidEmail($email)) {
         $emailError = "Please enter a valid email address";
     }
+    $formFields['email'] = $email;
 
     //validating the URL
     if (checkForEmpty($url)) {
@@ -65,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (checkForInvalidURL($url)) {
         $urlError = "Please enter a valid URL";
     }
+    $formFields['url'] = $url;
 
     // validating the password
     if (checkForEmpty($password)) {
@@ -72,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (checkForInvalidPassword($password)) {
         $passwordError = "Please use a strong password";
     }
+    $formFields['password'] = $password;
 
     if (isset($nameError)) {
         $_SESSION['nameError'] = $nameError;
@@ -85,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($passwordError)) {
         $_SESSION['passwordError'] = $passwordError;
     }
+    $_SESSION['formFields'] = $formFields;
 }
 
 ?>
@@ -107,22 +113,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form action="" method="post" class="w-25 mx-auto" style="min-width: 300px;">
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name">
+                <input type="text" class="form-control" id="name" name="name" value="<?php echo isset($_SESSION['formFields']['name']) ? $_SESSION['formFields']['name'] : "" ?>">
                 <div class="text-danger fw-bold"><?php echo isset($_SESSION['nameError']) ? $_SESSION['nameError'] : "" ?></div>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="email" name="email">
+                <input type="email" class="form-control" id="email" name="email" value="<?php echo isset($_SESSION['formFields']['email']) ? $_SESSION['formFields']['email'] : "" ?>">
                 <div class="text-danger fw-bold"><?php echo isset($_SESSION['emailError']) ? $_SESSION['emailError'] : "" ?></div>
             </div>
             <div class="mb-3">
                 <label for="portfolio" class="form-label">Portfolio Link</label>
-                <input type="text" class="form-control" id="portfolio" name="portfolio">
+                <input type="text" class="form-control" id="portfolio" name="portfolio" value="<?php echo isset($_SESSION['formFields']['url']) ? $_SESSION['formFields']['url'] : "" ?>">
                 <div class="text-danger fw-bold"><?php echo isset($_SESSION['urlError']) ? $_SESSION['urlError'] : "" ?></div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password">
+                <input type="password" class="form-control" id="password" name="password" value="<?php echo isset($_SESSION['formFields']['password']) ? $_SESSION['formFields']['password'] : "" ?>">
                 <div class="text-danger fw-bold"><?php echo isset($_SESSION['passwordError']) ? $_SESSION['passwordError'] : "" ?></div>
                 <div class="form-text">
                     Your password should have:
