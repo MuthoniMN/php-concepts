@@ -52,6 +52,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['passwordError'] = $passwordError;
     }
     $_SESSION['formFields'] = $formFields;
+
+    if (!$nameError || !$emailError || !$usernameError || !$passwordError) {
+        $query = "INSERT INTO userDetails(`name`, email, username, `password`) VALUES (?, ?, ?, ?)";
+
+        $stmt = $connection->prepare($query);
+        $stmt->bind_param("ssss", $name, $email, $username, $password);
+        $result = $stmt->execute();
+
+        if ($result) {
+            echo "User saved successfully";
+            header("Location: landing.php");
+        } else {
+            $signupError = "Sign-up failed";
+            $_SESSION['signupError'] = $signupError;
+        }
+    }
 }
 ?>
 
@@ -101,6 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             </div>
 
+            <p class="text-danger fw-bold"><? echo isset($_SESSION['signupError']) ? $_SESSION['signupError'] : "" ?></p>
             <input type="submit" value="Sign Up" class="btn btn-outline-primary">
         </form>
     </section>
