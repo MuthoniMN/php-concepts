@@ -1,6 +1,58 @@
 <?php
 include "./db.php";
 include "./form-validate.php";
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS);
+    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    // validating the name
+    if (checkForEmpty($name)) {
+        $nameError = "Please enter your name";
+    } elseif (checkForInvalidText($name)) {
+        $nameError = "Please only use characters and spaces. No special characters";
+    }
+    $formFields['name'] = $name;
+    // validating the email
+    if (checkForEmpty($email)) {
+        $emailError = "Please enter your email";
+    } elseif (checkForInvalidEmail($email)) {
+        $emailError = "Please enter a valid email address";
+    }
+    $formFields['email'] = $email;
+
+    //validating the username
+    if (checkForEmpty($username)) {
+        $usernameError = "Please enter a username";
+    } elseif (checkForInvalidUsername($username)) {
+        $usernameError = "Please use characters, numbers and underscores only";
+    }
+    $formFields['username'] = $username;
+
+    // validating the password
+    if (checkForEmpty($password)) {
+        $passwordError = "Please enter your password";
+    } elseif (checkForInvalidPassword($password)) {
+        $passwordError = "Please use a strong password";
+    }
+    $formFields['password'] = $password;
+
+    if (isset($nameError)) {
+        $_SESSION['nameError'] = $nameError;
+    }
+    if (isset($emailError)) {
+        $_SESSION['emailError'] = $emailError;
+    }
+    if (isset($usernameError)) {
+        $_SESSION['usernameError'] = $usernameError;
+    }
+    if (isset($passwordError)) {
+        $_SESSION['passwordError'] = $passwordError;
+    }
+    $_SESSION['formFields'] = $formFields;
+}
 ?>
 
 <!DOCTYPE html>

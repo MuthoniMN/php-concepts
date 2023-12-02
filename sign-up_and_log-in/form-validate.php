@@ -15,6 +15,14 @@ function checkForInvalidText($string)
     return false;
 }
 
+function checkForInvalidUsername($string)
+{
+    if (!preg_match("/^[A-Za-z0-9_]*$/", $string)) {
+        return true;
+    }
+    return false;
+}
+
 function checkForInvalidEmail($str)
 {
     if (!filter_var($str, FILTER_VALIDATE_EMAIL)) {
